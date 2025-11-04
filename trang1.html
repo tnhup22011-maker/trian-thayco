@@ -8,6 +8,46 @@
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet">
 
+
+</head>
+<body>
+
+<div class="device-wrap">
+<div class="tablet" role="img" aria-label="Tablet mockup">
+<div class="screen">
+<div class="browser-bar" aria-hidden="true">
+<div class="circles">
+<span style="background:#ff605c"></span>
+<span style="background:#ffbd2e"></span>
+<span style="background:#27c93f"></span>
+</div>
+<div class="address"></div>
+</div>
+<!-- center card -->
+<div class="card" role="region" aria-label="Presents card">
+<h2>Presents For You</h2>
+<div class="subtitle">CLICK ANY GIFT TO OPEN</div>
+<div class="gifts">
+
+<a class="gift" href="gift1.html" title="Film🎬">
+<div class="icon">🎥</div>
+</a>
+<a class="gift" href="gift2.html" title="Memories🎉">
+<div class="icon">🎡</div>
+</a>
+<a class="gift" href="gift3.html" title="Message📅">
+<div class="icon">📑</div>
+</a>
+</div>
+
+</div>
+
+<div class="home-bar" aria-hidden="true"></div>
+</div>
+</div>
+</div>
+</body>
+</html>
 <style>
 :root{
 --bg-a: #f6f3f5;
@@ -193,44 +233,6 @@ color: inherit; /* để icon không bị đổi màu khi hover */
 }
 
 </style>
-</head>
-<body>
-
-<div class="device-wrap">
-<div class="tablet" role="img" aria-label="Tablet mockup">
-<div class="screen">
-<div class="browser-bar" aria-hidden="true">
-<div class="circles">
-<span style="background:#ff605c"></span>
-<span style="background:#ffbd2e"></span>
-<span style="background:#27c93f"></span>
-</div>
-<div class="address"></div>
-</div>
-<!-- center card -->
-<div class="card" role="region" aria-label="Presents card">
-<h2>Presents For You</h2>
-<div class="subtitle">CLICK ANY GIFT TO OPEN</div>
-<div class="gifts">
-
-<a class="gift" href="gift1.html" title="Flowers🎗">
-<div class="icon">🎆</div>
-</a>
-<a class="gift" href="gift2.html" title="Film🎥">
-<div class="icon">🎬</div>
-</a>
-<a class="gift" href="gift3.html" title="Message✉">
-<div class="icon">📑</div>
-</a>
-</div>
-
-</div>
-
-<div class="home-bar" aria-hidden="true"></div>
-</div>
-</div>
-</div>
-
 <script>
 document.querySelectorAll('.gift').forEach(g=>{
 g.addEventListener('click', ()=> {
@@ -242,6 +244,3 @@ g.style.transform = '';
 
 });
 </script>
-
-</body>
-</html>
