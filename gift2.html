@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Gallery — Auto Play Reel</title>
+    <style>
+        :root {
+            --accent: #d66b88;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Poppins", system-ui, Arial;
+            /* background: trắng hai đầu + hồng pastel giữa, rõ hơn */
+            background: linear-gradient(180deg, #ffffff 0%, #ffeef6 30%, #f8b3c6 55%, #fff0f6 80%, #ffffff 100%);
+            padding: 28px;
+        }
+
+        .outer {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 18px;
+            border-radius: 18px;
+            background: linear-gradient(180deg, #fff, #fff);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.10);
+        }
+
+        /* layout: left / center / right
+     Center made wider so the main visual feels big */
+        .stage {
+            display: grid;
+            grid-template-columns: 0.9fr 380px 0.9fr;
+            /* center larger */
+            gap: 28px;
+            align-items: start;
+        }
+
+        /* left & right columns (two frames each), make them smaller with scale */
+        .col {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .frame {
+            background: linear-gradient(180deg, #fff7fb, #fff0f6);
+            border-radius: 14px;
+            padding: 8px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            height: 300px;
+            /* smaller height for side frames */
+            overflow: hidden;
+            position: relative;
+            border: 6px solid rgba(214, 107, 136, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            display: block;
+        }
+
+        /* scale down side frames to make center feel bigger, and apply stagger offsets */
+        .left-col .frame,
+        .right-col .frame {
+            transform-origin: center;
+            transform: scale(0.78);
+        }
+
+        .left-col .frame:nth-child(1) {
+            transform: translateY(20px) scale(0.78);
+        }
+
+        .left-col .frame:nth-child(2) {
+            transform: translateY(-6px) scale(0.78);
+        }
+
+        .right-col .frame:nth-child(1) {
+            transform: translateY(-10px) scale(0.78);
+        }
+
+        .right-col .frame:nth-child(2) {
+            transform: translateY(14px) scale(0.78);
+        }
+
+        /* center column: slot + reel, larger slot + reel */
+        .center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .slot {
+            width: 220px;
+            /* made wider */
+            height: 62px;
+            /* shallow slot to look like slit */
+            border-radius: 8px;
+            background: linear-gradient(180deg, #fff, #fff0f6);
+            border: 3px solid rgba(214, 107, 136, 0.14);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(214, 107, 136, 0.08);
+            position: relative;
+            z-index: 6;
+            margin-top: -20px;
+            /* overlap feel: slot slightly overlaps */
+        }
+
+        .slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .reel {
+            width: 220px;
+            /* match slot width */
+            height: 620px;
+            /* taller reel so center feels big */
+            background: linear-gradient(180deg, #fff, #fff0f6);
+            border-radius: 12px;
+            padding: 10px;
+            overflow: auto;
+            border: 2px solid rgba(214, 107, 136, 0.06);
+            box-shadow: inset 0 6px 14px rgba(0, 0, 0, 0.03);
+        }
+
+        .thumb {
+            width: 100%;
+            height: 140px;
+            /* larger thumb */
+            margin-bottom: 12px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform .18s, box-shadow .18s, border-color .18s;
+        }
+
+        .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .thumb.active {
+            border-color: rgba(214, 107, 136, 0.32);
+            box-shadow: 0 14px 34px rgba(214, 107, 136, 0.10);
+            transform: translateY(-6px);
+        }
+
+        /* clone animation element (used to animate from slot -> target) */
+        .anim-clone {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            border-radius: 6px;
+            box-shadow: 0 22px 70px rgba(0, 0, 0, 0.30);
+            transition: transform .95s cubic-bezier(.2, .9, .3, 1), opacity .6s;
+            will-change: transform, opacity;
+        }
+
+        /* responsive */
+        @media (max-width:1100px) {
+            .stage {
+                grid-template-columns: 1fr 320px 1fr;
+            }
+
+            .reel {
+                height: 520px;
+                width: 180px;
+            }
+
+            .slot {
+                width: 180px;
+            }
+        }
+
+        @media (max-width:760px) {
+            .stage {
+                grid-template-columns: 1fr;
+            }
+
+            .slot,
+            .reel {
+                width: 100%;
+                height: 300px;
+                margin-top: -10px;
+            }
+
+            .left-col .frame,
+            .right-col .frame {
+                transform: none;
+                height: 260px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="outer">
+        <div class="stage">
+            <!-- left -->
+            <div class="col left-col">
+                <div class="frame" id="left1">
+                    <img src="913.jpg" alt="">
+                </div>
+                <div class="frame" id="left2">
+                    <img src="namdung.jpg" alt="">
+                </div>
+            </div>
+
+            <!-- center -->
+            <div class="center">
+                <div class="slot" id="slot" title="Khe xem trước"></div>
+
+                <div class="reel" id="reel">
+                    <!-- exactly 4 thumbs -->
+                    <div class="thumb" data-src="https://via.placeholder.com/1600x1000?text=Scene+1"
+                        data-target="#left1"><img src="2011nam.jpg" alt=""></div>
+                    <div class="thumb" data-src="https://via.placeholder.com/1600x1000?text=Scene+2"
+                        data-target="#right1"><img src="2011tapthe2.jpg" alt=""></div>
+                    <div class="thumb" data-src="https://via.placeholder.com/1600x1000?text=Scene+3"
+                        data-target="#left2"><img src="2011nu.jpg" alt=""></div>
+                    <div class="thumb" data-src="https://via.placeholder.com/1600x1000?text=Scene+4"
+                        data-target="#right2"><img src="tapthengoi.jpg" alt=""></div>
+                </div>
+            </div>
+
+            <!-- right -->
+            <div class="col right-col">
+                <div class="frame" id="right1">
+                    <img src="namnam.jpg" alt="">
+                </div>
+                <div class="frame" id="right2">
+                    <img src="theduc.jpg" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
