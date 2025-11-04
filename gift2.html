@@ -5,6 +5,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Gallery — Auto Play Reel</title>
+    <link href="@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Quicksand:wght@400;600&display=swap');
+        rel=" stylesheet">
+
     <style>
         :root {
             --accent: #d66b88;
@@ -73,27 +76,40 @@
         }
 
         /* scale down side frames to make center feel bigger, and apply stagger offsets */
+        /* SIDE COLUMNS: use flex so two frames are spaced evenly and aligned */
+        .left-col,
+        .right-col {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            /* ensures top & bottom frames are evenly spaced */
+            gap: 28px;
+            /* consistent gap between frames */
+            min-height: 720px;
+            /* ensure column height matches center reel + slot */
+            align-items: center;
+            /* center frames horizontally inside column */
+        }
+
+        /* keep side frames slightly smaller visually (but no translate trick) */
         .left-col .frame,
         .right-col .frame {
+            transform: scale(0.86);
+            /* makes side frames look smaller than center, adjust if needed */
             transform-origin: center;
-            transform: scale(0.78);
+            width: 90%;
+            /* keep them narrower than center column */
+            height: 300px;
+            /* consistent height for side frames */
+            margin: 0;
+            /* remove extra margins that cause uneven spacing */
         }
 
-        .left-col .frame:nth-child(1) {
-            transform: translateY(20px) scale(0.78);
-        }
+        /* If you want perfect pixel control, tweak min-height and scale above:
+   - increase min-height if the frames are too squished
+   - reduce scale (e.g., 0.78) if you want them smaller
+*/
 
-        .left-col .frame:nth-child(2) {
-            transform: translateY(-6px) scale(0.78);
-        }
-
-        .right-col .frame:nth-child(1) {
-            transform: translateY(-10px) scale(0.78);
-        }
-
-        .right-col .frame:nth-child(2) {
-            transform: translateY(14px) scale(0.78);
-        }
 
         /* center column: slot + reel, larger slot + reel */
         .center {
@@ -237,6 +253,30 @@
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
             background: linear-gradient(135deg, #ffc8df, #ff9fbd, #ffd1e6);
         }
+
+        .card h2 {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 52px;
+            color: #ff5f94;
+            text-shadow:
+                0 0 10px rgba(255, 182, 193, 0.6),
+                2px 2px 0 #ffe4ec;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .header-box {
+            font-family: 'Quicksand', sans-serif;
+            text-align: center;
+            font-size: 32px;
+            font-weight: 600;
+            color: #7b233b;
+            padding: 10px 20px;
+            margin-bottom: 1px;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 
@@ -248,6 +288,7 @@
                 <div class="frame" id="left1">
                     <img src="913.jpg" alt="">
                 </div>
+                <div class="header-box">Kỉ niệm✨</div>
                 <div class="frame" id="left2">
                     <img src="namdung.jpg" alt="">
                 </div>
@@ -255,7 +296,10 @@
 
             <!-- center -->
             <div class="center">
-                <div class="slot" id="slot" title="Khe xem trước"></div>
+                <div class="slot" id="slot" title="Memories🎉">
+                    <div class="header-box">Capture</div>
+
+                </div>
 
                 <div class="reel" id="reel">
                     <!-- exactly 4 thumbs -->
@@ -275,12 +319,50 @@
                 <div class="frame" id="right1">
                     <img src="namnam.jpg" alt="">
                 </div>
+                <div class="header-box">Thanh Xuân🔮</div>
                 <div class="frame" id="right2">
                     <img src="theduc.jpg" alt="">
                 </div>
             </div>
         </div>
     </div>
+<script>
+document.querySelectorAll('.gift img').forEach(img => {
+  img.style.cursor = 'pointer';
+  img.addEventListener('click', () => {
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100vw';
+    overlay.style.height = '100vh';
+    overlay.style.background = 'rgba(0,0,0,0.6)';
+    overlay.style.display = 'flex';
+    overlay.style.alignItems = 'center';
+    overlay.style.justifyContent = 'center';
+    overlay.style.zIndex = '9999';
+    overlay.style.backdropFilter = 'blur(4px)';
+
+    const clone = img.cloneNode();
+    clone.style.maxWidth = '90vw';
+    clone.style.maxHeight = '85vh';
+    clone.style.borderRadius = '14px';
+    clone.style.boxShadow = '0 0 30px rgba(255,255,255,0.3)';
+    clone.style.transition = 'transform .3s ease';
+    clone.style.transform = 'scale(1.1)';
+
+    overlay.appendChild(clone);
+    document.body.appendChild(overlay);
+
+    // Đóng khi click ra ngoài ảnh
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.remove();
+      }
+    });
+  });
+});
+</script>
 
 </body>
 <a href="index.html" class="back-btn">↩</a>
