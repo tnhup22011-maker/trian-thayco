@@ -1,33 +1,166 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Lovely Moments</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600&family=Great+Vibes&display=swap"
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Quicksand:wght@400;600&display=swap"
         rel="stylesheet">
+
     <style>
+        :root {
+            --bg-top: #fff6fa;
+            --bg-mid: #ffeef6;
+            --accent: #d95b87;
+            --card-bg: #fff;
+            --soft: rgba(217, 91, 135, 0.08);
+        }
+
         * {
-            box-sizing: border-box;
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%;
             margin: 0;
-            padding: 0;
+            font-family: Quicksand, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+            color: #2b1220
         }
 
         body {
-            background: linear-gradient(135deg, #fff0f5, #ffe6e6);
-            font-family: "Poppins", sans-serif;
+            background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 28%, #fff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 28px;
+        }
+
+        /* background "map" simple: light road + pins */
+        .scene {
+            width: min(1200px, 96vw);
+            max-width: 1400px;
+            background:
+                radial-gradient(circle at 12% 20%, rgba(0, 0, 0, 0.03), transparent 6%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.85));
+            border-radius: 18px;
+            padding: 34px;
+            position: relative;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        /* decorative tiles (faint pink boxes like the sample) */
+        .scene::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(90deg, rgba(217, 91, 135, 0.02) 0 6%, transparent 6%),
+                linear-gradient(180deg, rgba(217, 91, 135, 0.02) 0 6%, transparent 6%);
+            background-size: 140px 140px;
+            opacity: 0.45;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* main content area on top of the map */
+        .card {
+            position: relative;
+            z-index: 5;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 28px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 250, 254, 0.98));
+            border-radius: 14px;
+            box-shadow: 0 16px 50px rgba(0, 0, 0, 0.08);
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            gap: 18px;
+        }
+
+        .title {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            font-size: 40px;
+            color: #c83b6b;
+            letter-spacing: 0.6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 6px 18px rgba(200, 60, 100, 0.08);
+        }
+
+        /* big rectangle for video */
+        .video-frame {
+            width: 92%;
+            max-width: 920px;
+            aspect-ratio: 16/9;
+            background: linear-gradient(180deg, #fff, #fff0f6);
+            border-radius: 12px;
             overflow: hidden;
-            position: relative;
-            background: radial-gradient(circle at 50% 30%, #ffe6ef 0%, #fbd6e3 40%, #fff 100%);
-            background-attachment: fixed;
-            background-size: cover;
+            border: 6px solid rgba(217, 91, 135, 0.06);
+            box-shadow: 0 20px 60px rgba(217, 91, 135, 0.10);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-frame iframe,
+        .video-frame video {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+        }
+
+        /* a small caption area under the video */
+        .caption {
+            width: 92%;
+            max-width: 920px;
+            font-size: 14px;
+            color: #6b3b4b;
+            text-align: left;
+            opacity: 0.95;
+        }
+
+        /* responsive tweaks */
+        @media (max-width:900px) {
+            .title {
+                font-size: 28px;
+            }
+
+            .video-frame {
+                max-width: 860px;
+            }
+        }
+
+        @media (max-width:520px) {
+            .scene {
+                padding: 18px
+            }
+
+            .card {
+                padding: 16px;
+                gap: 12px
+            }
+
+            .title {
+                font-size: 20px
+            }
+
+            .video-frame {
+                width: 100%;
+                aspect-ratio: 16/9;
+                border-radius: 10px;
+            }
+
+            .caption {
+                font-size: 13px
+            }
         }
 
         /* --- Bong bóng bay --- */
@@ -37,7 +170,7 @@
             background: rgba(255, 182, 193, 0.8);
             border-radius: 50%;
             animation: rise 8s infinite ease-in;
-            z-index: 5;
+            z-index: -1;
             /* nằm dưới video */
         }
 
@@ -62,7 +195,7 @@
             background: pink;
             transform: rotate(45deg);
             animation: floatUp 7s infinite ease-in;
-            z-index: 5;
+            z-index: -1;
             /* nằm dưới video */
         }
 
@@ -98,44 +231,18 @@
             }
         }
 
-        /* --- Tiêu đề --- */
-        .title {
-            font-family: "Pacifico", cursive;
-            font-size: 2.2rem;
-            color: #e75480;
-            text-align: center;
-            margin-bottom: 15px;
-            z-index: 10;
-            animation: fadeInDown 1s ease;
-        }
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 50%;
+            }
 
-        /* --- Video --- */
-        .video-container {
-            position: relative;
-            z-index: 10;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-            animation: fadeIn 2s ease;
-        }
+            50% {
+                background-position: 100% 50%;
+            }
 
-        iframe {
-            width: 90vw;
-            max-width: 800px;
-            height: 450px;
-            border: none;
-            display: block;
-        }
-
-        /* --- Footer --- */
-        .thankyou {
-            font-family: 'Great Vibes', cursive;
-            font-size: 36px;
-            color: #d63384;
-            text-align: center;
-            margin-top: 20px;
-            z-index: 10;
-            animation: fadeInUp 1.2s ease;
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         /* --- Hiệu ứng chữ bay --- */
@@ -201,16 +308,22 @@
 </head>
 
 <body>
-    <div class="title">💖 Góc Nhỏ Của 9/13 💖</div>
 
-    <div class="video-container">
-        <iframe src="https://drive.google.com/file/d/15LXYB2Cf5EyCwfcVjhr9YqCnou_R-7qr/preview" allow="autoplay">
-        </iframe>
+    <div class="scene">
+        <!-- actual content card -->
+        <div class="card">
+            <div class="title">Góc Nhỏ Của 9/13<span style="font-size:22px"></span></div>
+
+            <div class="video-frame" aria-label="Khung video">
+                <iframe src="https://drive.google.com/file/d/15LXYB2Cf5EyCwfcVjhr9YqCnou_R-7qr/preview"
+                    title="Video"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+
+            <div class="caption">Khoảnh khắc tuổi học trò</div>
+        </div>
     </div>
-
-    <div class="thankyou">Khoảng Khắc Tuổi Học Trò</div>
-
-    <!-- Hiệu ứng bong bóng và tim -->
     <script>
         function createBubble() {
       const bubble = document.createElement("div");
